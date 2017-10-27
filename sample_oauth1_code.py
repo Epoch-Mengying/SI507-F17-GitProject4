@@ -1,3 +1,5 @@
+# Added Cache function
+# May not work...
 # OAuth1 Code to access data from the Twitter API...
 import requests_oauthlib
 import webbrowser
@@ -148,7 +150,17 @@ oauth = requests_oauthlib.OAuth1Session(client_key,
 
 
 # Make a request to the Tweet search endpoint, searching for the phrase 'University of Michigan', looking to get 3 Tweets back
-r = oauth.get("https://api.twitter.com/1.1/search/tweets.json", params = {'q': 'University of Michigan', 'count' : 3})
+def get_from_cache(url, params, file_name):
+    try:
+        html = open(file_name, 'r').read()
+    except:
+        html = oauth.get(url, params).text
+        f = open(file_name,"w")
+        f.write(html)
+        f.close()
+    return html
+    
+r = get_from_cache("https://api.twitter.com/1.1/search/tweets.json", params = {'q': 'University of Michigan', 'count' : 3}, "data.html")
 
 
 
